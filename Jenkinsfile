@@ -29,7 +29,7 @@ pipeline {
                         -p 5435:5432 \
                         -e POSTGRES_USER=${JENKINS_SPRING_DATASOURCE_USERNAME} \
                         -e POSTGRES_PASSWORD=${JENKINS_SPRING_DATASOURCE_USERNAME} \
-                        -e POSTGRES_MULTIPLE_DATABASES="arti-pro",keycloak,grafana \
+                        -e POSTGRES_MULTIPLE_DATABASES=artipro,keycloak,grafana \
                         -v postgres_data:/var/lib/postgresql/data \
                         ${IMAGE_NAME}
                     """
