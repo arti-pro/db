@@ -32,11 +32,14 @@ pipeline {
                         -e POSTGRES_MULTIPLE_DATABASES=artipro,keycloak,grafana \
                         -v postgres_data:/var/lib/postgresql/data \
                         ${IMAGE_NAME}
-                        # Update pg_hba.conf inside the running container
-                        docker exec -u postgres ${CONTAINER_NAME} bash -c "echo 'host all all 0.0.0.0/0 md5' >> /var/lib/postgresql/data/pg_hba.conf"
-                        docker exec -u postgres ${CONTAINER_NAME} bash -c "echo 'host all all ::/0 md5' >> /var/lib/postgresql/data/pg_hba.conf"
-                        # Restart container to apply changes
-                        docker restart ${CONTAINER_NAME}
+                    """
+                    echo 'Updating pg_hba.conf to allow remote connections'
+
+                    sh """
+                        docker exec -it ${CONTAINER_NAME} bash -c "sed -i '/host all all all scram-sha-256/d' /var/lib/postgresql/data/pg_hba.conf"
+                        docker exec -it ${CONTAINER_NAME} bash -c "echo 'host all all 0.0.0.0/0 md5' >> /var/lib/postgresql/data/pg_hba.conf"
+                        docker exec -it ${CONTAINER_NAME} bash -c "echo 'host all all ::/0 md5' >> /var/lib/postgresql/data/pg_hba.conf"
+                        docker exec -it ${CONTAINER_NAME} bash -c "pg_ctl reload"
                     """
 
                 }
