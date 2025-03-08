@@ -36,10 +36,10 @@ pipeline {
                     echo 'Updating pg_hba.conf to allow remote connections'
 
                     sh """
-                        docker exec -it ${CONTAINER_NAME} bash -c "sed -i '/host all all all scram-sha-256/d' /var/lib/postgresql/data/pg_hba.conf"
-                        docker exec -it ${CONTAINER_NAME} bash -c "echo 'host all all 0.0.0.0/0 md5' >> /var/lib/postgresql/data/pg_hba.conf"
-                        docker exec -it ${CONTAINER_NAME} bash -c "echo 'host all all ::/0 md5' >> /var/lib/postgresql/data/pg_hba.conf"
-                        docker exec -it ${CONTAINER_NAME} bash -c "pg_ctl reload"
+                        docker exec db-arti-pro-container bash -c "sed -i '/host all all all scram-sha-256/d' /var/lib/postgresql/data/pg_hba.conf"
+                        docker exec db-arti-pro-container bash -c "echo 'host all all 0.0.0.0/0 md5' >> /var/lib/postgresql/data/pg_hba.conf"
+                        docker exec db-arti-pro-container bash -c "echo 'host all all ::/0 md5' >> /var/lib/postgresql/data/pg_hba.conf"
+                        docker exec db-arti-pro-container bash -c "pg_ctl reload"
                     """
 
                 }
